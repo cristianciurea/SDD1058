@@ -9,6 +9,8 @@ struct carte
 	int cod;
 	char *titlu;
 	float pret;
+	//int nrAutori;
+	//char **numeAutori;
 };
 
 //definire structura nod stiva (informatie utila de tip carte si pointer de legatura next)
@@ -169,4 +171,5 @@ void main()
 	nodLista* cap = NULL;
 	conversieStivaListaSimpla(&varf, &cap);
 	traversareLista(cap);
+	
 }

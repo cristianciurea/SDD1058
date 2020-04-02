@@ -90,6 +90,57 @@ void dezalocare(hashT tabela)
 	}
 }
 
+int stergere(hashT tabela, int cod)
+{
+	int pozitie;
+	if (tabela.vect!=NULL)
+	{
+		pozitie = functieHash(cod, tabela);
+		if(tabela.vect[pozitie]==NULL)
+			return -1;
+		else
+		{
+			if(tabela.vect[pozitie]->inf.cod == cod)
+			{
+				if(tabela.vect[pozitie]->next == NULL)
+				{
+					nodLS *temp = tabela.vect[pozitie];
+					free(temp->inf.nume);
+					free(temp);
+					tabela.vect[pozitie] = NULL;
+				}
+				else
+				{
+					nodLS *temp = tabela.vect[pozitie];
+					tabela.vect[pozitie] = temp->next;
+					free(temp->inf.nume);
+					free(temp);
+				}
+			}
+			else
+			{
+				nodLS *temp = tabela.vect[pozitie];
+				while(temp->next!=NULL && temp->next->inf.cod!=cod)
+					temp = temp->next;
+				nodLS *p = temp->next;
+				if(p->next !=NULL)
+				{
+					temp->next = p->next;
+					free(p->inf.nume);
+					free(p);
+				}
+				else
+				{
+					temp->next = NULL;
+					free(p->inf.nume);
+					free(p);
+				}
+			}
+		}
+	}
+	return pozitie;
+}
+
 void main()
 {
 	hashT tabela;
@@ -118,5 +169,12 @@ void main()
 	}
 
 	traversare(tabela);
+
+	stergere(tabela, 305);
+
+	printf("\n------dupa stergere-------");
+
+	traversare(tabela);
+
 	dezalocare(tabela);
 }

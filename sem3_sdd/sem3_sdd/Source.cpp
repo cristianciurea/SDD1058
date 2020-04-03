@@ -203,7 +203,7 @@ void main()
 	traversare(cap);
 	traversareInvers(coada);
 	//dezalocare(cap);
-	printf("\n-------conversie-----------");
+	/*printf("\n-------conversie-----------");
 	produs **vect = (produs**)malloc(n*sizeof(produs*));
 	int nr = 0;
 	conversieListaVector(cap, vect, &nr);
@@ -216,13 +216,13 @@ void main()
 		free(vect[i]->cod);
 		free(vect[i]);
 	}
-	free(vect);
-	/*printf("\n----stergere--------");
+	free(vect);*/
+	printf("\n----stergere--------");
 	char denumire[20];
 	printf("Denumire de sters: ");
 	scanf("%s", denumire);
 	stergeNodDenumire(&cap, &coada, denumire);
 	traversare(cap);
 	traversareInvers(coada);
-	dezalocare(cap);*/
+	dezalocare(cap);
 }

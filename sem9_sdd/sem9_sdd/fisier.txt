@@ -1,0 +1,7 @@
+6
+5 Gigel 5
+3 Dorel 6
+7 Ionel 7
+1 Marcel 8
+4 Maricica 9
+10 Costel 10

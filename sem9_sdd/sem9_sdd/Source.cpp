@@ -11,6 +11,7 @@ struct student
 
 struct nodarb
 {
+	int BF;
 	student inf;
 	nodarb *left, *right;
 };
@@ -64,7 +65,7 @@ void preordine(nodarb *rad)
 {
 	if(rad!=NULL)
 	{
-		printf("\nCod=%d, Nume=%s, Medie=%5.2f", rad->inf.cod, rad->inf.nume, rad->inf.medie);
+		printf("\nCod=%d, Nume=%s, Medie=%5.2f, BF=%d", rad->inf.cod, rad->inf.nume, rad->inf.medie, rad->BF);
 		preordine(rad->left);
 		preordine(rad->right);
 	}
@@ -75,7 +76,7 @@ void inordine(nodarb *rad)
 	if(rad!=NULL)
 	{
 		inordine(rad->left);
-		printf("\nCod=%d, Nume=%s, Medie=%5.2f", rad->inf.cod, rad->inf.nume, rad->inf.medie);
+		printf("\nCod=%d, Nume=%s, Medie=%5.2f, BF=%d", rad->inf.cod, rad->inf.nume, rad->inf.medie, rad->BF);
 		inordine(rad->right);
 	}
 }
@@ -86,7 +87,7 @@ void postordine(nodarb *rad)
 	{
 		postordine(rad->left);
 		postordine(rad->right);
-		printf("\nCod=%d, Nume=%s, Medie=%5.2f", rad->inf.cod, rad->inf.nume, rad->inf.medie);
+		printf("\nCod=%d, Nume=%s, Medie=%5.2f, BF=%d", rad->inf.cod, rad->inf.nume, rad->inf.medie, rad->BF);
 	}
 }
 
@@ -159,6 +160,93 @@ void conversieArboreVector(nodarb *rad, student *vect, int *nr)
 	}
 }
 
+			/*5
+		3       7
+   2       4  6    8
+
+
+			3
+		2      4
+		          7
+			  6       8
+
+
+            7
+		6      8
+	3
+2      4*/
+
+nodarb *stergeRad(nodarb *rad)
+{
+	nodarb *aux = rad;
+	if(aux->left!=NULL)
+	{
+		rad = aux->left;
+		if(aux->right!=NULL)
+		{
+			nodarb* temp = aux->left;
+			while(temp->right)
+				temp = temp->right;
+			temp->right = aux->right;
+		}
+	}
+	else
+		if(aux->right!=NULL)
+			rad = aux->right;
+		else
+			rad = NULL;
+	free(aux->inf.nume);
+	free(aux);
+	return rad;
+}
+
+nodarb* stergeNod(nodarb *rad, int cheie)
+{
+	if(rad==NULL)
+		return NULL;
+	else
+		if(rad->inf.cod == cheie)
+		{
+			rad = stergeRad(rad);
+			return rad;
+		}
+		else
+		{
+			nodarb *aux = rad;
+			while(true)
+			{
+				if(cheie < aux->inf.cod)
+					if(aux->left == NULL)
+						break;
+					else
+						if(aux->left->inf.cod == cheie)
+							aux->left = stergeRad(aux->left);
+						else
+							aux = aux->left;
+				else
+					if(cheie > aux->inf.cod)
+						if(aux->right == NULL)
+							break;
+						else
+							if(aux->right->inf.cod == cheie)
+								aux->right = stergeRad(aux->right);
+							else
+								aux = aux->right;
+			}
+			return rad;
+		}
+}
+
+void calculBF(nodarb *rad)
+{
+	if(rad!=NULL)
+	{
+		rad->BF = nrNiveluri(rad->right) - nrNiveluri(rad->left);
+		calculBF(rad->left);
+		calculBF(rad->right);
+	}
+}
+
 void main()
 {
 	int n;
@@ -184,9 +272,20 @@ void main()
 		fscanf(f, "%f", &s.medie);
 
 		rad = inserare(s, rad);
+		
 	}
 	fclose(f);
 
+			/*5
+		3      7
+	1     4       10
+
+	      
+	      5 -1
+	 3 0       10 0
+1 0       4 0*/
+
+	calculBF(rad);
 	preordine(rad);
 	printf("\n--------------------\n");
 	inordine(rad);
@@ -203,9 +302,9 @@ void main()
 	printf("\nInaltime subarbore stang este %d: ", nrNiveluri(rad->left));
 	printf("\nInaltime subarbore drept este %d: ", nrNiveluri(rad->right));
 
-	printf("\n----Vector--------------------\n");
+	//printf("\n----Vector--------------------\n");
 
-	student* vect = (student*)malloc(n*sizeof(student));
+	/*student* vect = (student*)malloc(n*sizeof(student));
 	int nr = 0;
 	conversieArboreVector(rad, vect, &nr);
 	for(int i=0;i<nr;i++)
@@ -213,7 +312,16 @@ void main()
 	
 	for(int i=0;i<nr;i++)
 		free(vect[i].nume);
-	free(vect);
+	free(vect);*/
 
-	//dezalocare(rad);
+	//rad = stergeRad(rad);
+	rad = stergeNod(rad, 7);
+	calculBF(rad);
+	inordine(rad);
+	printf("\n--------------------\n");
+	inordine(rad->left);
+	printf("\n--------------------\n");
+	inordine(rad->right);
+
+	dezalocare(rad);
 }

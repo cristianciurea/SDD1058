@@ -247,6 +247,81 @@ void calculBF(nodarb *rad)
 	}
 }
 
+nodarb* rotatie_dreapta(nodarb *rad)
+{
+	printf("\nRotatie dreapta\n");
+	nodarb *nod1 = rad->left;
+	rad->left = nod1->right;
+	nod1->right = rad;
+	rad = nod1;
+	return rad;
+}
+
+nodarb* rotatie_stanga(nodarb *rad)
+{
+	printf("\nRotatie stanga\n");
+	nodarb *nod1 = rad->right;
+	rad->right = nod1->left;
+	nod1->left = rad;
+	rad = nod1;
+	return rad;
+}
+
+nodarb* rotatie_stanga_dreapta(nodarb *rad)
+{
+	printf("\nRotatie stanga-dreapta\n");
+	nodarb *nod1 = rad->left;
+	nodarb *nod2 = nod1->right;
+	nod1->right = nod2->left;
+	nod2->left = nod1;
+	rad->left = nod2->right;
+	nod2->right = rad;
+	rad = nod2;
+	return rad;
+}
+
+nodarb* rotatie_dreapta_stanga(nodarb *rad)
+{
+	printf("\nRotatie dreapta-stanga\n");
+	nodarb *nod1 = rad->right;
+	nodarb *nod2 = nod1->left;
+	nod1->left = nod2->right;
+	nod2->right = nod1;
+	rad->right = nod2->left;
+	nod2->left = rad;
+	rad = nod2;
+	return rad;
+}
+
+nodarb *reechilibrare(nodarb *rad)
+{
+	calculBF(rad);
+	if(rad->BF <= -2 && rad->left->BF <= -1)
+	{
+		rad = rotatie_dreapta(rad);
+		calculBF(rad);
+	}
+	else
+		if(rad->BF <= -2 && rad->left->BF >= 1)
+		{
+			rad = rotatie_stanga_dreapta(rad);
+			calculBF(rad);
+		}
+		else
+			if(rad->BF >= 2 && rad->right->BF >= 1)
+				{
+					rad = rotatie_stanga(rad);
+					calculBF(rad);
+				}
+				else
+					if(rad->BF >= 2 && rad->right->BF <= -1)
+					{
+						rad = rotatie_dreapta_stanga(rad);
+						calculBF(rad);
+					}
+	return rad;
+}
+
 void main()
 {
 	int n;
@@ -273,6 +348,7 @@ void main()
 
 		rad = inserare(s, rad);
 		
+		rad = reechilibrare(rad);
 	}
 	fclose(f);
 
@@ -285,7 +361,7 @@ void main()
 	 3 0       10 0
 1 0       4 0*/
 
-	calculBF(rad);
+	/*calculBF(rad);
 	preordine(rad);
 	printf("\n--------------------\n");
 	inordine(rad);
@@ -296,7 +372,13 @@ void main()
 	if(nodCautat!=NULL)
 		printf("\nStudentul cautat se numeste %s", nodCautat->inf.nume);
 	else
-		printf("\nNu exista!");
+		printf("\nNu exista!");*/
+
+	inordine(rad);
+	printf("\n--------------------\n");
+	inordine(rad->left);
+	printf("\n--------------------\n");
+	inordine(rad->right);
 
 	printf("\nInaltime este %d: ", nrNiveluri(rad));
 	printf("\nInaltime subarbore stang este %d: ", nrNiveluri(rad->left));
@@ -315,13 +397,48 @@ void main()
 	free(vect);*/
 
 	//rad = stergeRad(rad);
-	rad = stergeNod(rad, 7);
-	calculBF(rad);
+	//rad = stergeNod(rad, 7);
+	//calculBF(rad);
+	
+
+			  /*  5 -2
+	      3 -1          7 0
+     2 -1       4 0           		
+1 0
+
+				3
+			2	     5
+		1		  4    7*/
+
+
+
+				/*5 -2
+		 2 1            7 0
+   1 0        3 1
+                 4 0
+
+
+				 3
+			2        5
+		1         4      7*/
+
+
+			/*10 -2
+		6 2		  11 1
+	5 0		9 -2       12 0
+		8 -1
+	7 0*/
+
+	rad = stergeNod(rad, 9);
+	rad = reechilibrare(rad);
+
 	inordine(rad);
 	printf("\n--------------------\n");
 	inordine(rad->left);
 	printf("\n--------------------\n");
 	inordine(rad->right);
+	printf("\nInaltime subarbore stang este %d: ", nrNiveluri(rad->left));
+	printf("\nInaltime subarbore drept este %d: ", nrNiveluri(rad->right));
 
 	dezalocare(rad);
 }

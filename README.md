@@ -9,3 +9,5 @@ Seminar 7 - Structuri de date (C/C++): https://youtu.be/teQOMxXROH0
 Seminar 8 - Structuri de date (C/C++): https://youtu.be/9cbt7i05LZs
 
 Seminar 9 - Structuri de date (C/C++): https://youtu.be/lv1Apve_Yb8
+
+Seminar 10 - Structuri de date (C/C++): https://youtu.be/Mq_CeaTG_Zw
